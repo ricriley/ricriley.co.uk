@@ -1,64 +1,54 @@
 ---
-title: A post with code samples
-date: '2019-06-18'
+title: My Favourite youTube Channels
+socialImage: /images/youtube-blog-868x489.png
+date: 2019-07-18T23:00:00.000Z
 tags:
-  - demo-content
-  - code
-  - blog
+  - youtube
+  - fun
+  - ""
 ---
-The best way to demo a code post is to display a real life post, so check out this one from [andy-bell.design](https://andy-bell.design/wrote/creating-a-full-bleed-css-utility/) about a full bleed CSS utility.
+![YouTube Logo](/images/youtube-blog-868x489.png)
 
-- - -
+It’s taken me a while but as a recent fan (and premium member) of youTube, I thought I’d share my favourite channels:
 
-Sometimes you want to break your components out of the constraints that they find themselves in. A common situation where this occurs is when you don’t have much control of the container that it exists in, such as a CMS main content area.
+## [Unbox Therapy](https://www.youtube.com/channel/UCsTcErHg8oDvUnTzoqsYeNw)
 
-This is even more the case with editing tools such as the [WordPress Gutenberg editor](https://wordpress.org/gutenberg/), where in theory, you could pull in a component from a design system and utilise it in the main content of your web page. In these situations, it can be pretty darn handy to have a little utility that makes the element 100% of the viewport’s width _and_ still maintain its flow within its parent container.
+One of the original and most popular gadget channels, videos are short and informative covering unique gadgets you probably won’t see anywhere else.
 
-This is when I normally pull the `.full-bleed` utility class out of my back pocket.
+## [Neil Patel](https://www.youtube.com/channel/UCl-Zrl0QhF66lu1aGXaTbfw)
 
-## The `.full-bleed` utility
+Digital marketing guru Neil is offers invaluable advice on how to grow your business through online marketing.
 
-It’s small, but hella mighty:
+## [MKBHD](https://www.youtube.com/channel/UCBJycsmduvYEL83R_U4JriQ)
 
-```css
-.full-bleed {
-  width: 100vw;
-  margin-left: 50%;
-  transform: translateX(-50%);
-}
-```
+Another gadget channel, Marques Brownlee’s produces some great content his are well known for their slick professional quality.
 
-Here it is in a context where it makes a fancy `<aside>` and a `<figure>` element bleed out of their parent container.
+## [Seattle Coffee Gear](https://www.youtube.com/channel/UC9VhfQi-D-7morDdwjVcJPA)
 
-<iframe height="300" style="width: 100%;" scrolling="no" title="Piccalilli CSS Utility — Issue  #2 — Full bleed utility" src="//codepen.io/andybelldesign/embed/Nmxrwv/?height=300&theme-id=dark&default-tab=css,result" frameborder="no" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href='https://codepen.io/andybelldesign/pen/Nmxrwv/'>Piccalilli CSS Utility — Issue  #2 — Full bleed utility</a> by Andy Bell
-  (<a href='https://codepen.io/andybelldesign'>@andybelldesign</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+Reviews for all of the coffee equipment I can only dream of owning.
 
-The `.full-bleed` utility gives those elements prominence and _importantly_ keeps their semantic place in the page. Just how I like it.
+## [TED](https://www.youtube.com/channel/UCAuUUnT6oDeKwE6v1NGQxug)
 
-- - -
+Packed full of interesting talks and speakers. You could easily spend hours picking through these, I recommend watching the man who traded a [paperclip for a house](https://www.youtube.com/watch?v=8s3bdVxuFBs).
 
-🔥 **Pro tip**: When working with a utility like `.full-bleed`, it’s a good idea to add an inner container that has a max-width and auto horizontal margin. For this, I normal create a shared `.wrapper` component like this:
+## [Lifehacker](https://www.youtube.com/channel/UCYGnmkFGP4EgAOqu58JA_lg)
 
-```css
-.wrapper {
-  max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-```
+Random but useful knowledge, I’ve been a follower of their website for years.
 
-Having a container like `.wrapper` helps to create consistent, centred content.  
+## [Linus Tech Tips](https://www.youtube.com/channel/UCXuqSBlHAE6Xw-yeJA0Tunw)
 
-- - -
+Linus delivers tech reviews and offers advice on of everything IT.
 
-### How the `.full-bleed` utility works
+## [Dottotech](http://uc9bqptccsyhvqsbl2rumm4w/)
 
-We set the container to be `width: 100vw`, which equates to the full viewport width. We couldn’t set it to `width: 100%` because it would only fill the space of its parent element. The parent element’s width _is_ useful though, because by setting `margin-left: 50%`, we are telling the component to align its **left edge** to the center of its parent element, because `50%` is half of the **parent element’s** width.
+Steve Dotto is obsessed with internet apps and offers video tutorials of his latest finds.
 
-Finally, we use CSS transforms to `translateX(-50%)`. Because the transform works off the element’s dimensions and not the parent’s dimensions, it’ll pull the element back `50vw`, because it’s `100vw` wide, thus making it sit perfectly flush with the viewport’s edges.
+## [EverythingApplePro](https://www.youtube.com/channel/UCj34AOIMl_k1fF7hcBkD_dw)
 
-## Wrapping up
+I’m not as much of an Apple fan as I used to be, but anyone interested in technology has to keep tabs on them. EverythingApplePro breaks down rumours and leaks for upcoming Apple products.
 
-Hopefully this short and sweet trick will help you out on your projects. If it does, [drop me a tweet](https://twitter.com/andybelldesign), because I’d love to see it!
+## [Doug DeMuro](https://www.youtube.com/channel/UCsqjHFMB_JYTaEnf_vmTNqg)
+
+One for the car enthusiasts, former Auto Trader journalist Doug reviews cars.
+
+There you have it, what are your favourite channels? I love to hear from you, give me a shout on social media.
