@@ -4,6 +4,8 @@ title: About
 permalink: /about/index.html
 socialImage: /images/web.jpg
 ---
+![A portrait of Ric Riley](/images/web.jpg "Ric Riley")
+
 **Hi, I’m Ric Riley and I increase online revenue, leads and sales for well-known brands and businesses.**
 
 To do this I use **conversion rate optimisation** (CRO), a technique which uses a combination of analytics and a/b testing to increase the percentage of visitors that become customers.
