@@ -1,13 +1,13 @@
 {
   "showThemeCredit": false,
-  "name": "ricriley.co.uk",
+  "name": "Ric Riley.co.uk",
   "shortDesc": "I'd love to hear from you, ping me on on your social media platform of choice (I'm on most of them).",
   "url": "https://ricriley.co.uk",
   "authorEmail": "ricriley@gmail.com",
   "authorHandle": "@ricriley",
   "authorName": "Ric Riley",
   "enableThirdPartyComments": false,
-  "paymentPointer": "https://bit.ly/2KTRI1B",
+  "paymentPointer": "$ilp.uphold.com/GnApw4xJEZ9X",
   "faviconPath": "/images/favicon.png",
   "maxPostsPerPage": 5
 }
