@@ -1,7 +1,7 @@
 ---
 layout: home
 title: Conversion Rate Optimisation & Analytics
-metaDesc: Hi, I’m Ric Riley and I increase online revenue, leads and sales for
+metaDesc: I’m Ric Riley and I increase online revenue, leads and sales for
   well-known brands and businesses.
 postsHeading: Latest posts
 archiveButtonText: See all posts
