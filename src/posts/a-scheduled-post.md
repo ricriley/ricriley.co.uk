@@ -1,11 +1,14 @@
 ---
 title: The Pursuit of Coffee Perfection
+socialImage: /images/espresso-cup.jpg
 date: 2012-01-25T00:00:00.000Z
 tags:
   - food
   - coffee
   - fun
 ---
+![A cup of coffee](/images/espresso-cup.jpg)
+
 It's no secret I’m a coffee addict, and I’ve been pursuing a home-brewed cup that rivals a Starbucks Caramel Macchiato for quite some time. But finding [the recipe](http://starbuckcoffee.net/how-to-make-a-starbucks-caramel-macchiato.html) is only half of the story, I found out very quickly that making good coffee is going to cost me more than I initially thought. Websites such as[ coffeegeek](http://coffeegeek.com/) and [homebarista](http://www.home-barista.com/) told me that decent espresso machines will set me back at least £1000! I could buy 333 Macchiatos from Starbucks for that.
 
 Since I’m on a budget I started with an [Aeropress](http://www.amazon.co.uk/Aerobie-AeroPress-80R08-Coffee-Maker/dp/B000GXZ2GS/ref=sr_1_1?ie=UTF8&qid=1323346292&sr=8-1) (recommended by many forums), which is a plunger type device that claims to make 4 espressos. This device is fantastic and it does make a great cup of coffee, but I wouldn’t call it an espresso, it’s just not strong enough.
