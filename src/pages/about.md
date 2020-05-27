@@ -2,6 +2,7 @@
 layout: layouts/page.njk
 title: About
 permalink: /about/index.html
+socialImage: /images/web.jpg
 ---
 **Hi, I’m Ric Riley and I increase online revenue, leads and sales for well-known brands and businesses.**
 
