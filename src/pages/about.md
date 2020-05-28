@@ -4,7 +4,7 @@ title: About
 permalink: /about/index.html
 socialImage: /images/web.jpg
 ---
-![A portrait of Ric Riley](/images/web.jpg "Ric Riley")
+![A portrait of Ric Riley](/images/web.jpg)
 
 **Hi, I’m Ric Riley and I increase online revenue, leads and sales for well-known brands and businesses.**
 
