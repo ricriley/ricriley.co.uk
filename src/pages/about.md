@@ -2,9 +2,11 @@
 layout: layouts/page.njk
 title: About
 permalink: /about/index.html
+metaTitle: About Ric Riley
+metaDesc: ""
 socialImage: /images/web.jpg
 ---
-![A portrait of Ric Riley](/images/web.jpg "Ric Riley")
+![A portrait of Ric Riley](/images/web.jpg)
 
 **Hi, I’m Ric Riley and I increase online revenue, leads and sales for well-known brands and businesses.**
 
@@ -14,6 +16,6 @@ I was a Frontend Developer for many years before joining one of the UKs largest 
 
 Having ran thousands of tests over the last several years I continue to be surprised and astonished by the results, and this is exactly why everyone should test. You might think you know the outcome but why guess when you can let the customer decide.
 
-For any questions please don’t hesitate to [contact me here](/contact) or [tweet me here](https://twitter.com/ricriley).
+For more details you can find me on [LinkedIn here](https://www.linkedin.com/in/ricriley/), if you have any questions please don’t hesitate to [contact me here](/contact) or [tweet me here](https://twitter.com/ricriley).
 
-I’ll be great to hear from you.
+It'd be great to hear from you.
