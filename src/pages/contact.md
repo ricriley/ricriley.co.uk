@@ -1,9 +1,9 @@
 ---
-title: 'Contact'
-permalink: '/contact/index.html'
-layout: 'layouts/contact.njk'
+layout: layouts/contact.njk
+title: Contact
+permalink: /contact/index.html
 ---
+If you have any questions or queries I'd love to hear from you, please use the form below and I'll get back to you ASAP.
 
-You can have a contact page which uses a basic form. The [code with the form fields lives here](https://github.com/hankchizljaw/hylia/blob/master/src/_includes/layouts/contact.njk). 
-
-To delete the contact form for this site, delete this page in the CMS or at `src/pages/contact.md`. You probably will also want to delete `src/pages/thank-you.md`.
+You can also find me on:\
+**Twitter:** <https://twitter.com/ricriley>
