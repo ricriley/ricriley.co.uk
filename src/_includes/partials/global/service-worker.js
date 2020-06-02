@@ -29,7 +29,7 @@ const addItemsToCache = function(cacheName, items = []) {
 self.addEventListener('install', evt => {
   self.skipWaiting();
 
-  addItemsToCache(CACHE_KEYS.PRE_CACHE, PRE_CACHE_URLS);
+  addItemsToCache(CACHE_KEYS.PRE_CACHE/*, PRE_CACHE_URLS*/);
 });
 
 self.addEventListener('activate', evt => {
