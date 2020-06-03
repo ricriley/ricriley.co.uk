@@ -29,6 +29,10 @@
       &:not(:hover) {
         text-decoration: none;
       }
+
+      &:not(:hover)[aria-current]{
+        border-bottom: 1px solid #000;
+      }
     }
   }
 }
