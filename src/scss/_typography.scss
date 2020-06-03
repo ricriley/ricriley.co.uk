@@ -1,3 +1,13 @@
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local(''),
+       url('../fonts/lora-v15-latin-700.woff2') format('woff2'),
+       url('../fonts/lora-v15-latin-700.woff') format('woff');
+}
+
 body {
   // Strip the unit off the size ratio to generate a line height
   $line-height: get-size(600);
