@@ -49,7 +49,7 @@ Originating from Japan they’re not available everywhere but Has Bean stock the
 
 Turkish coffee was always something I enjoyed whist abroad but to be honest I never knew it was so simple. After a couple of searches on youTube I found some very helpful videos demonstrating that making a Turkish Coffee consists of not much more than boiling water and finely ground coffee in a small pan. Heres what I found:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/BL8QCaO6KMs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/WFOOMi3rcfU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 **The Chemex –** [Company Link](http://www.chemexcoffeemaker.com/products/classic.html)\
 The Chemex is maybe a somewhat snobby way of brewing your coffee, but I can guarantee you that people will be very impressed when you serve your coffee in a Chemex! The Chemex is basically a coffee dripper on a big scale, using filter papers and a specially designed carafe to can create some of the best brewing results there is, I know that it is really highly regarded amongst many coffee geeks.
@@ -58,7 +58,6 @@ Now Chemex are an american company (I think) and therefore they are fairly cheap
 
 Also take a look at another brew guide from Has Bean:
 
-\
 <iframe width="560" height="315" src="https://www.youtube.com/embed/iaIe_DH5ao8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 **The Siphon Filter –** [Amazon Link](http://www.amazon.co.uk/Hario-Coffee-Syphon-3-Cup/dp/B000IKLQY6/ref=sr_1_5?s=kitchen&ie=UTF8&qid=1348087451&sr=1-5)Now this is without doubt the most impressive way to brew coffee. Siphon Filters usually originate from Japan, who are actually the worlds biggest coffee drinkers (so they know a thing or two). Now I don’t think that I can explain how these actually work, it’s sort of a mixture of the Moka Pot, Magic, and the Chemex. The video explains it much better than I could. Now they are notoriously difficult to get right, but I’m sure it will be good fun trying!
