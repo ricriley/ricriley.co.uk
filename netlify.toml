@@ -1,3 +1,9 @@
 [build]
   command = "npm run production"
   publish = "dist"
+
+  [[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' style-src 'self' 'unsafe-inline' script-src 'self' 
+www.google-analytics.com https://instant.page;"
