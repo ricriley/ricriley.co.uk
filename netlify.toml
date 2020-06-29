@@ -5,4 +5,4 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self' google-analytics.com instant.page"
+    Content-Security-Policy = "default-src 'self';"
