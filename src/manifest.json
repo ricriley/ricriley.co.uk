@@ -20,4 +20,5 @@
     "sizes": "144x144",
     "type": "image/png"
   }]
+  "content_security_policy": "default-src 'self' style-src 'self' 'unsafe-inline';" 
 }
