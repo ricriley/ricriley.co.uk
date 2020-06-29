@@ -8,13 +8,14 @@ for = "/*"
 [headers.values]
 X-Frame-Options = "DENY"
 X-XSS-Protection = "1; mode=block"
-Content-Security-Policy = "default-src 'self' 'unsafe-inline' https://www.google-analytics.com https://instant.page"
+Content-Security-Policy = "default-src 'self' 'unsafe-inline' google-analytics.com instant.page $.netlify.com unpkg.com youtube.com $.vimeo.com"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "origin"
 Feature-Policy = "geolocation none"
 
 [[headers]]
 for = "/images*"
+for = "/fonts*"
 
 [headers.values]
 cache-control = '''
