@@ -1,12 +1,11 @@
 [build]
-  command = "npm run production"
-  publish = "dist"
+command = "npm run production"
+publish = "dist"
 
 [[headers]]
-  # Define which paths this specific [[headers]] block will cover.
-  for = "/*"
+for = "/*"
 
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    Content-Security-Policy = Content-Security-Policy = "default-src 'self' style-src 'self' 'unsafe-inline' script-src 'self' www.google-analytics.com https://instant.page;"
+[headers.values]
+X-Frame-Options = "DENY"
+X-XSS-Protection = "1; mode=block"
+Content-Security-Policy = Content-Security-Policy = "default-src 'self' style-src 'self' 'unsafe-inline' script-src 'self' www.google-analytics.com https://instant.page;"
