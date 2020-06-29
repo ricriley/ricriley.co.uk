@@ -6,12 +6,15 @@ publish = "dist"
 for = "/*"
 
 [headers.values]
-X-Frame-Options = "DENY"
+cache-control = "public,max-age=60"
+Referrer-Policy = "origin"
+X-Frame-Options = "SAMEORIGIN"
+X-Content-Type-Options = "nosniff"
+Feature-Policy = "camera 'none'; geolocation 'none'; microphone 'none'"
 X-XSS-Protection = "1; mode=block"
 Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://instant.page https://identity.netlify.com https://unpkg.com https://www.youtube.com https://player.vimeo.com https://i.ytimg.com"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "origin"
-Feature-Policy = "geolocation none"
-cache-control = '''
-max-age=604800,
-public'''
+
+[[headers]]
+for = "/*.*"
+[headers.values]
+cache-control = "public,max-age=360000"
