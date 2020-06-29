@@ -8,4 +8,4 @@ for = "/*"
 [headers.values]
 X-Frame-Options = "DENY"
 X-XSS-Protection = "1; mode=block"
-Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' www.google-analytics.com https://instant.page;"
+Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw' https://www.google-analytics.com/analytics.js"
