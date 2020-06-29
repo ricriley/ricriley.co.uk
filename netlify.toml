@@ -8,7 +8,7 @@ for = "/*"
 [headers.values]
 X-Frame-Options = "DENY"
 X-XSS-Protection = "1; mode=block"
-Content-Security-Policy = "default-src 'self' 'unsafe-inline' https://www.google-analytics.com https://instant.page https://identity.netlify.com https://unpkg.com https://www.youtube.com https://player.vimeo.com https://i.ytimg.com"
+Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://instant.page https://identity.netlify.com https://unpkg.com https://www.youtube.com https://player.vimeo.com https://i.ytimg.com"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "origin"
 Feature-Policy = "geolocation none"
