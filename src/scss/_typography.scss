@@ -4,8 +4,8 @@
   font-weight: 700;
   font-display: swap;
   src: local(''),
-       url('//www.ricriley.co.uk/fonts/lora-v15-latin-700.woff2/fonts/lora-v15-latin-700.woff2') format('woff2'),
-       url('//www.ricriley.co.uk/fonts/lora-v15-latin-700.woff2/fonts/lora-v15-latin-700.woff') format('woff');
+       url('/fonts/lora-v15-latin-700.woff2') format('woff2'),
+       url('/fonts/lora-v15-latin-700.woff') format('woff');
 }
 
 body {
