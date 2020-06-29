@@ -17,4 +17,4 @@ Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' http
 [[headers]]
 for = "/*.*"
 [headers.values]
-cache-control = "public,max-age=360000"
+cache-control = "public,max-age=604800"
