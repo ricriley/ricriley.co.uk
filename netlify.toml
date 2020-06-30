@@ -11,10 +11,11 @@ Referrer-Policy = "origin"
 X-Frame-Options = "SAMEORIGIN"
 X-Content-Type-Options = "nosniff"
 Feature-Policy = "camera 'none'; geolocation 'none'; microphone 'none'"
+Strict-Transport-Security = "max-age=2592000; includeSubDomains"
 X-XSS-Protection = "1; mode=block"
 Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://instant.page https://identity.netlify.com https://unpkg.com https://www.youtube.com https://player.vimeo.com https://i.ytimg.com"
 
 [[headers]]
 for = "/*.*"
 [headers.values]
-cache-control = "public,max-age=604800"
+cache-control = "public,max-age=2628000"
