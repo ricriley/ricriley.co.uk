@@ -8,7 +8,6 @@
   <link rel="preload" as="font" type="font/woff2" href="/fonts/lora-v15-latin-700.woff2" crossorigin>
   <link rel="preconnect" href="https://www.ricriley.com" crossorigin>
   <link rel="preconnect" href="https://www.google-analytics.com">
-  <link rel="preconnect" href="https://instant.page">
   <link rel="icon" href="{{ site.faviconPath }}" type="image/png" />
   {% include "partials/global/meta-info.njk" %}
   <script>document.documentElement.classList.remove('no-js');</script>
@@ -28,7 +27,14 @@
   {% include "partials/global/site-foot.njk" %}
   {% block foot %}
   {% endblock %}
-  <script type="module" src="/js/components/theme-toggle.js" async defer></script>
+  <script defer>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', 'UA-1812237-4', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script defer src='https://www.google-analytics.com/analytics.js'></script>
+  <script type="module" src="/js/components/theme-toggle.js" defer></script>
+  <script src="/js/instantpage.js" type="module" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
