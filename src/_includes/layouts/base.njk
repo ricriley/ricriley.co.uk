@@ -1,22 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ site.url }}/feed.xml" />
-  <link rel="preload" as="font" type="font/woff2" href="/fonts/lora-v15-latin-700.woff2" crossorigin>
-  <link rel="preconnect" href="https://www.ricriley.com" crossorigin>
-  <link rel="preconnect" href="https://www.google-analytics.com">
-  <link rel="icon" href="{{ site.faviconPath }}" type="image/png" />
   {% include "partials/global/meta-info.njk" %}
   <script>document.documentElement.classList.remove('no-js');</script>
   <style>{% include "assets/css/global.css" %}</style>
-  <link rel="apple-touch-icon" href="/images/icon.png">
-  <link rel="shortcut icon" href="/images/icon.png">
-  <meta name="apple-mobile-web-app-title" content="ricriley.co.uk">
-  <meta name="theme-color" content="#fedb8b">
-  <link rel="manifest" href="/manifest.json">
+  <script src="https://www.googleoptimize.com/optimize.js?id=GTM-NKFJQHG"></script>
   {% block head %}
   {% endblock %}
 </head>
@@ -27,14 +15,14 @@
   {% include "partials/global/site-foot.njk" %}
   {% block foot %}
   {% endblock %}
-  <script defer>
+  <script>
     window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
     ga('create', 'UA-1812237-4', 'auto');
     ga('send', 'pageview');
   </script>
-  <script defer src='https://www.google-analytics.com/analytics.js'></script>
-  <script defer src="/js/components/theme-toggle.js" type="module" ></script>
-  <script defer src="/js/components/instantpage.js" type="module"></script>
+  <script src='https://www.google-analytics.com/analytics.js'></script>
+  <script src="/js/components/theme-toggle.js" type="module" ></script>
+  <script src="/js/components/instantpage.js" type="module"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
