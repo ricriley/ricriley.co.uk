@@ -1,0 +1,31 @@
+version: 6
+updates:
+  - package-ecosystem: "yargs-parser"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+
+  - package-ecosystem: "http-proxy"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+
+  - package-ecosystem: "bl"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+
+  - package-ecosystem: "prismjs"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+
+  - package-ecosystem: "elliptic"
+  directory: "/"
+  schedule:
+    interval: "weekly"
+
+  - package-ecosystem: "lodash"
+  directory: "/"
+  schedule:
+    interval: "weekly"
