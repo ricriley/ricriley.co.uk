@@ -13,7 +13,7 @@ X-Content-Type-Options = "nosniff"
 Feature-Policy = "camera 'none'; geolocation 'none'; microphone 'none'"
 Strict-Transport-Security = "max-age=2592000; includeSubDomains"
 X-XSS-Protection = "1; mode=block"
-Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://identity.netlify.com https://unpkg.com https://www.youtube.com https://player.vimeo.com https://i.ytimg.com;
+Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://identity.netlify.com https://unpkg.com https://www.youtube.com https://player.vimeo.com https://i.ytimg.com https://www.clarity.ms;
 script-src https://www.google-analytics.com 'unsafe-inline';
 style-src 'unsafe-inline'; 
 img-src https://www.google-analytics.com;
