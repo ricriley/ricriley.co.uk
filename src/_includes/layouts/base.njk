@@ -2,11 +2,21 @@
 <html lang="en" class="no-js">
 <head>
   {% include "partials/global/meta-info.njk" %}
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZSVRWPPPL9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-ZSVRWPPPL9');
+  </script>
   <script>document.documentElement.classList.remove('no-js');</script>
   <style>{% include "assets/css/global.css" %}</style>
   {% block head %}
   {% endblock %}
 </head>
+
 <body>
   {% include "partials/global/site-head.njk" %}
   {% block content %}
@@ -19,7 +29,6 @@
     ga('create', 'UA-1812237-4', 'auto');
     ga('send', 'pageview');
   </script>
-  <script defer src='https://www.google-analytics.com/analytics.js'></script>
   <script defer src="/js/components/theme-toggle.js" type="module" ></script>
   <script defer src="/js/components/instantpage.js" type="module"></script>
   <script>
