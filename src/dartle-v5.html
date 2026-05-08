@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#0f1115" />
+<title>Dartle — Daily Checkout</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #181b22;
+    --panel-2: #20242d;
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+    --accent: #ef4444;
+    --accent-2: #16a34a;
+    --gold: #f59e0b;
+    --border: #2a2f3a;
+    --board-black: #1a1a1a;
+    --board-cream: #f5e6c4;
+    --board-red: #d62828;
+    --board-green: #2a9d4a;
+    --board-wire: #6b7280;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 12px 12px 20px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 26px;
+    letter-spacing: 1px;
+    font-weight: 800;
+  }
+  h1 .accent { color: var(--accent); }
+  .sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .greeting {
+    font-size: 13px;
+    color: var(--text);
+    margin-top: 6px;
+  }
+  .greeting .name {
+    color: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+    border-bottom: 1px dashed transparent;
+  }
+  .greeting .name:hover { border-bottom-color: var(--accent); }
+  .streak {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(245,158,11,0.15);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    vertical-align: 1px;
+  }
+  .streak.broken {
+    background: rgba(156,163,175,0.12);
+    color: var(--muted);
+  }
+  .modal .streak-line {
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .modal .streak-line .streak {
+    margin-left: 0;
+    font-size: 13px;
+  }
+  .modal input.name-input {
+    width: 100%;
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    margin: 12px 0;
+  }
+  .modal input.name-input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+
+  .target-card {
+    width: 100%;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0 8px;
+  }
+  .target-left .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .target-left .value { font-size: 38px; font-weight: 800; line-height: 1; margin-top: 2px; }
+  .target-left .remaining { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .attempts {
+    display: flex; gap: 6px;
+  }
+  .pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #2a2f3a;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .pill.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .pill.done { background: #1f2937; color: var(--muted); }
+  .pill.done.success { background: rgba(22,163,74,0.18); color: #4ade80; border-color: rgba(22,163,74,0.4); }
+
+  .darts-row {
+    display: flex; gap: 8px; width: 100%; margin-bottom: 10px;
+  }
+  .dart-slot {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .dart-slot .lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;}
+  .dart-slot .val { font-size: 18px; font-weight: 700; margin-top: 2px; min-height: 22px; }
+  .dart-slot .val.placeholder { color: #4b5563; font-weight: 500; }
+  .dart-slot.invalid { border-color: var(--accent); }
+
+  /* Dartboard */
+  .board-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-width: 460px;          /* was 380 — give thumbs more room */
+    margin: 4px auto 10px;
+    position: relative;
+    user-select: none;
+  }
+  svg.board { width: 100%; height: 100%; display: block; touch-action: manipulation; }
+  svg.board .seg { cursor: pointer; transition: filter 0.08s; }
+  svg.board .seg:active { filter: brightness(1.5) saturate(1.3); }
+  /* Invisible tap-target overlays — must register clicks despite transparent fill */
+  svg.board .tap { pointer-events: all; }
+  svg.board .num { font-family: inherit; font-weight: 800; fill: #fff; pointer-events: none; }
+  svg.board .wire { stroke: var(--board-wire); stroke-width: 0.6; fill: none; pointer-events: none; }
+  .ripple {
+    position: absolute;
+    pointer-events: none;
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 24px;            /* bigger so the user sees what they hit */
+    animation: rip 0.95s ease-out forwards;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.85), 0 0 12px rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.5);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(245,158,11,0.5);
+  }
+  @keyframes rip {
+    0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    15%  { transform: translate(-50%, -60%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -150%) scale(1.0); opacity: 0; }
+  }
+
+  .controls {
+    display: flex; gap: 8px; width: 100%;
+  }
+  .hint-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 12px 0 4px;
+  }
+  .hint-btn {
+    flex: 0 0 auto !important;
+    background: rgba(245,158,11,0.12) !important;
+    border: 1px solid rgba(245,158,11,0.45) !important;
+    color: var(--gold) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.3px !important;
+    padding: 8px 18px !important;
+    border-radius: 999px !important;
+    line-height: 1.2 !important;
+  }
+  .hint-btn:active { transform: scale(0.96); }
+  button.btn {
+    flex: 1;
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button.btn:active { transform: scale(0.98); }
+  button.btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+  button.btn.primary:disabled { background: #4b5563; border-color: #4b5563; opacity: 0.6; cursor: not-allowed; }
+  button.btn.ghost { background: transparent; }
+
+  .history {
+    width: 100%;
+    margin-top: 12px;
+  }
+  .attempt-row {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .attempt-row .darts { color: var(--muted); }
+  .attempt-row .badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .badge.success { background: rgba(22,163,74,0.18); color: #4ade80; }
+  .badge.fail { background: rgba(239,68,68,0.18); color: #fca5a5; }
+  .badge.bust { background: rgba(245,158,11,0.18); color: #fcd34d; }
+
+  .coaching {
+    width: 100%;
+    margin-top: 10px;
+    background: linear-gradient(180deg, rgba(245,158,11,0.10) 0%, rgba(245,158,11,0.04) 100%);
+    border: 1px solid rgba(245,158,11,0.35);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .coaching .hint-label {
+    display: inline-block;
+    background: var(--gold);
+    color: #1a1a1a;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    margin-right: 6px;
+    vertical-align: 1px;
+  }
+  .coaching strong { color: var(--gold); letter-spacing: 1px; }
+  .coaching .hint-rest { color: var(--muted); }
+  .modal .perfect .note {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+    font-style: italic;
+  }
+  .modal .hint-used-badge {
+    display: inline-block;
+    margin: 6px 0 0;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(245,158,11,0.15);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+  .modal .comeback {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* Modal */
+  .modal-back {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 16px;
+  }
+  .modal-back.open { display: flex; }
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+  }
+  .modal h2 { margin: 0 0 6px; }
+  .modal .result-line { font-size: 14px; color: var(--muted); margin: 4px 0; }
+  .modal .result-line strong { color: var(--text); }
+  .modal .perfect {
+    background: var(--panel-2);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 12px 0;
+  }
+  .modal .perfect .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .modal .perfect .checkout { font-size: 18px; font-weight: 700; margin-top: 4px; letter-spacing: 1px; }
+  .share-block {
+    background: #0b0d11;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    text-align: left;
+    white-space: pre;
+    margin: 10px 0;
+    color: var(--text);
+    user-select: text;
+    -webkit-user-select: text;
+    cursor: text;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #111827;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .toast.show { opacity: 1; }
+
+  .footer { font-size: 11px; color: var(--muted); margin-top: 14px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>DAR<span class="accent">T</span>LE</h1>
+  <div class="sub" id="dateSub">Daily Checkout · —</div>
+  <div class="greeting" id="greeting" hidden></div>
+</header>
+
+<div class="target-card">
+  <div class="target-left">
+    <div class="label">Target</div>
+    <div class="value" id="targetValue">—</div>
+    <div class="remaining" id="remaining">Remaining: —</div>
+  </div>
+  <div class="attempts" id="attempts">
+    <div class="pill" data-i="0">1</div>
+    <div class="pill" data-i="1">2</div>
+    <div class="pill" data-i="2">3</div>
+  </div>
+</div>
+
+<div class="darts-row" id="dartsRow">
+  <div class="dart-slot"><div class="lbl">Dart 1</div><div class="val placeholder" data-slot="0">—</div></div>
+  <div class="dart-slot"><div class="lbl">Dart 2</div><div class="val placeholder" data-slot="1">—</div></div>
+  <div class="dart-slot"><div class="lbl">Dart 3</div><div class="val placeholder" data-slot="2">—</div></div>
+</div>
+
+<div class="board-wrap" id="boardWrap">
+  <svg class="board" id="board" viewBox="-200 -200 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="Dartboard"></svg>
+</div>
+
+<div class="history" id="history"></div>
+
+<div class="hint-row">
+  <button class="btn ghost hint-btn" id="hintBtn" hidden>💡 Show hint</button>
+</div>
+
+<div class="coaching" id="coaching" hidden></div>
+
+<div class="footer">A dart checkout = sum of your darts equals target, last dart is a Double or Bullseye.</div>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ------------ Recommended checkout routes ------------ */
+// Each entry: target -> array of dart labels, in order. Last must be double or Bull.
+const ROUTES = {
+  60:['20','D20'], 61:['25','D18'], 62:['T10','D16'], 63:['T9','D18'], 64:['T16','D8'],
+  65:['25','D20'], 66:['T10','D18'], 67:['T9','D20'], 68:['T16','D10'], 69:['T11','D18'],
+  70:['T10','D20'], 71:['T13','D16'], 72:['T16','D12'], 73:['T19','D8'], 74:['T14','D16'],
+  75:['T17','D12'], 76:['T16','D14'], 77:['T19','D10'], 78:['T14','D18'], 79:['T19','D11'],
+  80:['T20','D10'], 81:['25','16','D20'], 82:['Bull','D16'], 83:['25','18','D20'],
+  84:['25','19','D20'], 85:['25','20','D20'], 86:['T18','D16'], 87:['T17','D18'],
+  88:['T20','D14'], 89:['T19','D16'], 90:['T20','D15'], 91:['25','T16','D9'],
+  92:['25','T17','D8'], 93:['25','T18','D7'], 94:['25','T19','D6'], 95:['25','T20','D5'],
+  96:['T20','D18'], 97:['T19','D20'], 98:['T20','D19'], 99:['T19','10','D16'],
+  100:['T20','D20'], 101:['T20','9','D16'], 102:['T20','10','D16'], 103:['T19','14','D16'],
+  104:['T16','16','D20'], 105:['T20','13','D16'], 106:['T20','14','D16'], 107:['T19','T10','D10'],
+  108:['T16','20','D20'], 109:['T20','9','D20'], 110:['T19','13','D20'], 111:['T19','14','D20'],
+  112:['T20','12','D20'], 113:['T19','16','D20'], 114:['T19','17','D20'], 115:['T20','15','D20'],
+  116:['T19','19','D20'], 117:['T19','20','D20'], 118:['T20','18','D20'], 119:['T19','T12','D13'],
+  120:['T20','20','D20'], 121:['T20','T11','D14'], 122:['T18','T18','D7'], 123:['T19','T16','D9'],
+  124:['T20','T14','D11'], 125:['25','T20','D20'], 126:['T19','T19','D6'], 127:['T20','T17','D8'],
+  128:['T18','T16','D13'], 129:['T19','T16','D12'], 130:['T20','T20','D5'], 131:['T19','T16','D13'],
+  132:['Bull','T14','D20'], 133:['T20','T19','D8'], 134:['T20','T16','D13'], 135:['Bull','T15','D20'],
+  136:['T20','T20','D8'], 137:['T20','T19','D10'], 138:['T20','T14','D18'], 139:['T20','T13','D20'],
+  140:['T20','T16','D16'], 141:['T20','T19','D12'], 142:['T20','T14','D20'], 143:['T20','T17','D16'],
+  144:['T20','T20','D12'], 145:['T20','T15','D20'], 146:['T20','T18','D16'], 147:['T20','T17','D18'],
+  148:['T20','T20','D14'], 149:['T20','T19','D16'], 150:['T20','T18','D18'], 151:['T20','T17','D20'],
+  152:['T20','T20','D16'], 153:['T20','T19','D18'], 154:['T20','T18','D20'], 155:['T20','T19','D19'],
+  156:['T20','T20','D18'], 157:['T20','T19','D20'], 158:['T20','T20','D19'], 160:['T20','T20','D20'],
+  161:['T20','T17','Bull'], 164:['T20','T18','Bull'], 167:['T20','T19','Bull'], 170:['T20','T20','Bull'],
+};
+const NOTES = {
+  60:"S20 sits in the fattest segment of the board, leaving the iconic D20 finish. Beware the dreaded T20!",
+  61:"25 (the outer bull) leaves D18. If you miss the bull, almost any number lowers your score for next turn.",
+  62:"T10 is in the safe bottom of the board and leaves D16, the cleanest double to break down.",
+  63:"T9 leaves D18. T9 sits in a safe area — S9 leaves 54 (still finishable in 2).",
+  64:"Any 8/16 combination is friendly. T16 leaves D8 with backup safeties on neighbouring numbers.",
+  65:"25 leaves D20 — straightforward 2-dart hit if you ring the bull.",
+  66:"T10 leaves D18; S10 leaves 56, which is loaded with safeties (S16, T16, D8 all finish).",
+  67:"T9 leaves D20 — the gold-standard double if you stray to S9.",
+  68:"T16 leaves D10. S16 still leaves 52 (a 2-dart finish), so misses are recoverable.",
+  69:"T11-D18. Safeties are scarce here — try not to leave 69 if you can avoid it.",
+  70:"T10 leaves D20. The bottom-of-board T10 is a reliable target.",
+  71:"T13-D16. Sits next to T7 which leaves D25 (Bull) as a backup finish.",
+  72:"T16 leaves D12. S16 leaves 56 — most singles around 16 still finish.",
+  73:"T19 leaves D8. A miss into S19 leaves 54, still a 2-dart finish.",
+  74:"T14 leaves D16. T14 sits in a friendly neighbourhood with multiple safety doubles.",
+  75:"T17 leaves D12. Two-dart alternative is the bullseye finish (25-Bull).",
+  76:"T16 leaves D14. T20-D8 is popular but S1/S5 forces another triple — T16 is safer.",
+  77:"T19 leaves D10. Reliable: S19 leaves 58, still a 2-dart finish.",
+  78:"T14-D18. Safer than T18-D12: S11 or S9 still leave easy 2-dart finishes.",
+  79:"T19 leaves D11. A miss into S19 leaves 60 — still finishable.",
+  80:"T20 leaves D10. Hitting S20 still leaves a 2-dart 60.",
+  81:"25 leaves 56 — much easier 2-dart finish than the 62 you'd get from a single 19.",
+  82:"Bull (50) if you ring it. Single bull (25) still leaves 57 — manageable.",
+  83:"25 leaves 58. Then S18 leaves the textbook D20.",
+  84:"25 leaves 59. Then S19 leaves D20.",
+  85:"25 leaves 60. Then S20 leaves D20 — the cleanest 3-dart finish in this band.",
+  86:"T18 leaves D16. T18 is a safer first dart than T20 here (S18 leaves 68, still finishable).",
+  87:"T17 leaves D18. T17 sits between T2 and T3 — both reasonable misses.",
+  88:"T20 leaves D14. With 88 you can't avoid a bull/triple combo, so go for the highest triple.",
+  89:"T19 leaves D16. T19 has the friendliest neighbours of the 80-something finishes.",
+  90:"T20-D15 beats T18-D18: if you only hit S20, you still get another T20 attempt for the next turn.",
+  91:"25 leaves 66, which has its own clean 3-dart route. Better than chasing T17-D20 if your bull is on.",
+  92:"25 leaves 67. Going for the bull avoids needing a triple-double sequence.",
+  93:"25 leaves 68. Single bull is the safety net.",
+  94:"25 leaves 69. With 2 darts you'd shoot T18-D20 but with 3 in hand the bull is safer.",
+  95:"25 leaves 70 — the highest 'pure' 2-dart finish.",
+  96:"T20 leaves D18. Same route works with 2 darts in hand.",
+  97:"T19 leaves D20 — the cleanest finish-double on the board.",
+  98:"T20 leaves D19. Same route in 2 darts.",
+  99:"99 cannot be finished in 2 darts. T19 leaves 42, then a 6/10 split safety leaves D16 or D8.",
+  100:"T20 leaves D20. Avoid hitting S1 first — 99 left is impossible to finish with 2 darts.",
+  101:"T20 leaves 41 (S9-D16). Never go T17 with 3 darts: a stray S2 leaves the dreaded 99.",
+  102:"T20 leaves 42, then S10-D16. Avoid T1 strays which leave 99.",
+  103:"T19 leaves 46. Any version of 7 or 3 around T19 still leaves a 2-dart finish.",
+  104:"T16 leaves 56 — flexibility on the next dart. T18 isn't safe here: S1 leaves the impossible 103.",
+  105:"T20 leaves 45 (S13-D16). S1 or S5 misses still leave 2-dart finishes; T1 will kill you.",
+  106:"T20 leaves 46. S5 or T5 strays still leave 2-dart finishes.",
+  107:"T19 leaves 50. T10-D10 is safer than going for the bull on dart 2.",
+  108:"T16 leaves 60 — S8 is the best miss, leaving 100 (cleanly finishable next turn).",
+  109:"T20 leaves 49 (S9-D20). S5 stray still leaves a 2-dart finish.",
+  110:"T19 leaves 53 (S13-D20). Better safeties than chasing T20-DB.",
+  111:"T19 leaves 54. S7 or T7 strays still leave 2-dart finishes.",
+  112:"T20 leaves 52. Avoid leaving 112 if you can — only T5 and D1 are safe misses.",
+  113:"T19 leaves 56. Friendly neighbourhood for misses.",
+  114:"T19 leaves 57. S7 or T7 still leave 2-dart finishes; S4 is safe (T4 isn't).",
+  115:"T20 leaves 55. S5 or T5 still leave 2-dart finishes.",
+  116:"T19 leaves 59. Then S19 (right next door to T19) leaves D20.",
+  117:"T19 leaves 60 — the classic S20-D20 finish.",
+  118:"T20 leaves 58. Avoid T18: it leaves 64 which forces another triple or bull.",
+  119:"T19-T12-D13. Avoid S20 first dart — leaves 99!",
+  120:"T20 leaves 60 — the cleanest big finish. S20 still leaves a 2-dart route.",
+  121:"T20 leaves 61 (25-D18). Avoids the 99 trap from T17 misses.",
+  122:"T18-T18-D7. T18 is safer than T20 here: S18 leaves 104 (finishable).",
+  123:"T19 leaves 66, then T16-D9. S19 leaves a 2-dart finish.",
+  124:"T20 leaves 64 (T16-D8). S20 leaves a 2-dart finish.",
+  125:"25 leaves 100 — the easiest 3-dart route. Beats T18-71 which forces 2 triples.",
+  126:"Twin T19's leave D6. T19 strays into S19 still leave 2-dart finishes.",
+  127:"T20 leaves 67 (T9-D20). S20 leaves 107 — still a known finish.",
+  128:"T18-T16-D13. T18 is safer than T20 first dart for this score.",
+  129:"T19 leaves 72 (T16-D12). S19 leaves a 2-dart finish.",
+  130:"T20 leaves 70 (T10-D20). S20 leaves a 2-dart finish.",
+  131:"T19 leaves 74 (T14-D16). T7 is the safety on dart 2.",
+  132:"Bull leaves 82, then T14-D20. SB-only still leaves an easier 2-dart finish than S20 would.",
+  133:"T20 leaves 73 (T19-D8). The cleanest 133 route.",
+  134:"T20 leaves 74 (T14-D16).",
+  135:"Bull leaves 85, then T15-D20. SB still leaves a 2-dart finish; S20 doesn't.",
+  136:"Twin T20's leave D8. Most efficient 136.",
+  137:"T20-T19-D10. Both popular triples.",
+  138:"T20 leaves 78 (T14-D18). T19-T19-D12 also works.",
+  139:"T20-T13-D20. T13 sits in a safe zone.",
+  140:"T20-T16-D16. T16's neighbours are friendly.",
+  141:"T20-T19-D12. Standard pair-of-triples finish.",
+  142:"T20-T14-D20. Or T19-T19-D14 if you love T19.",
+  143:"T20-T17-D16.",
+  144:"Twin T20's leave D12.",
+  145:"T20-T15-D20.",
+  146:"T20-T18-D16. Or T19-T19-D16 if T20 is off.",
+  147:"T20-T17-D18.",
+  148:"Twin T20's leave D14.",
+  149:"T20-T19-D16.",
+  150:"T20-T18-D18. Avoid T19-T19 — leaves 36 (D18) but the route on D18 is harder.",
+  151:"T20-T17-D20.",
+  152:"Twin T20's leave D16. Or T19-T19-D19 if you favor 19's.",
+  153:"T20-T19-D18.",
+  154:"T20-T18-D20.",
+  155:"T20-T19-D19.",
+  156:"Twin T20's leave D18. Avoid T19 — leaves 99!",
+  157:"T20-T19-D20.",
+  158:"Twin T20's leave D19. Avoid T19 — leaves 101.",
+  160:"T20-T20-D20. Pure power finish.",
+  161:"T20-T17-Bull. Only big finish that doesn't need T20 twice.",
+  164:"T20-T18-Bull. Bull required because no double exceeds 50.",
+  167:"T20-T19-Bull.",
+  170:"T20-T20-Bull. The highest possible finish — coveted as a major accomplishment.",
+};
+// Helper: dart label -> point value (used for sum/validation only — matching is by label)
+const DART_VALUE = (() => {
+  const v = { '25':25, 'Bull':50 };
+  for (let i=1;i<=20;i++) { v[String(i)]=i; v['D'+i]=i*2; v['T'+i]=i*3; }
+  return v;
+})();
+// (legacy PERFECT block removed — ROUTES replaces it)
+
+/* ------------ Daily target (deterministic by date) ------------ */
+// MurmurHash3 32-bit finalizer. Without this mixer, consecutive date strings
+// (e.g. "2026-05-01" -> "2026-05-02") differ by 1 in the simple djb2 hash,
+// which propagates straight to the index so daily targets walk +1 per day.
+// The finalizer breaks that linearity so consecutive dates land on
+// pseudo-random indices.
+function mix32(h) {
+  h ^= h >>> 16;
+  h = Math.imul(h, 0x85ebca6b);
+  h ^= h >>> 13;
+  h = Math.imul(h, 0xc2b2ae35);
+  h ^= h >>> 16;
+  return h | 0;
+}
+function dailyTarget() {
+  const d = new Date();
+  const dateStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  let h = 0;
+  for (let i = 0; i < dateStr.length; i++) {
+    h = ((h<<5) - h) + dateStr.charCodeAt(i);
+    h |= 0;
+  }
+  h = mix32(h);
+  const targets = Object.keys(ROUTES).map(Number).sort((a,b)=>a-b);
+  const idx = Math.abs(h) % targets.length;
+  return { target: targets[idx], dateStr };
+}
+
+/* ------------ Dartboard SVG generation ------------ */
+// Visible geometry matches a traditional dartboard (thin triple/double bands).
+// Touch geometry (the *_TAP_* values) defines a separate, larger transparent
+// hit-test layer drawn on top of the visible rings, so taps register reliably
+// even on small fingers without changing the dartboard's appearance.
+const SEGMENT_NUMBERS = [20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
+const R_BULL_INNER = 12;       // bullseye (50)
+const R_BULL_OUTER = 28;       // 25 ring
+const R_TRIPLE_INNER = 102;
+const R_TRIPLE_OUTER = 114;    // visible triple band: 12 units thick
+const R_DOUBLE_INNER = 162;
+const R_DOUBLE_OUTER = 174;    // visible double band: 12 units thick
+const R_OUTER_RING = 188;      // visual rim
+
+// --- Touch hit-test bands (invisible, drawn on top, much larger) ---
+const R_BULL_TAP        = 20;  // bullseye tap (vs visible 12)
+const R_25_TAP_INNER    = 20;  // 25 tap annulus 20 -> 46 (vs visible 12 -> 28)
+const R_25_TAP_OUTER    = 46;
+const R_TRIPLE_TAP_IN   = 88;  // triple tap 88 -> 128 (40 thick, was 12)
+const R_TRIPLE_TAP_OUT  = 128;
+const R_DOUBLE_TAP_IN   = 148; // double tap 148 -> 184 (36 thick, was 12)
+const R_DOUBLE_TAP_OUT  = 184; // extends slightly into the rim for edge taps
+
+function polar(r, deg) {
+  const a = (deg - 90) * Math.PI / 180; // -90 so 0deg = top
+  return [r*Math.cos(a), r*Math.sin(a)];
+}
+
+function arcPath(r1, r2, a1, a2) {
+  // ring sector path between angles a1->a2 (degrees), radii r1<r2
+  const [x1,y1] = polar(r2,a1);
+  const [x2,y2] = polar(r2,a2);
+  const [x3,y3] = polar(r1,a2);
+  const [x4,y4] = polar(r1,a1);
+  const large = (a2-a1) > 180 ? 1 : 0;
+  return `M ${x1} ${y1} A ${r2} ${r2} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${r1} ${r1} 0 ${large} 0 ${x4} ${y4} Z`;
+}
+
+function buildBoard() {
+  const svg = document.getElementById('board');
+  // outer black ring
+  const outer = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  outer.setAttribute('r', R_OUTER_RING);
+  outer.setAttribute('cx',0); outer.setAttribute('cy',0);
+  outer.setAttribute('fill', '#0a0a0a');
+  svg.appendChild(outer);
+
+  const segWidth = 18; // 360/20
+  for (let i=0; i<20; i++) {
+    const num = SEGMENT_NUMBERS[i];
+    // each segment spans angle [a1,a2] where center is at i*18 starting from top
+    const center = i*segWidth;            // angle
+    const a1 = center - segWidth/2;
+    const a2 = center + segWidth/2;
+    // light/dark alternation
+    const isLight = (i % 2 === 0);
+    const baseLight = '#f5e6c4';
+    const baseDark  = '#1a1a1a';
+    const colDouble = isLight ? '#2a9d4a' : '#d62828';
+    const colTriple = colDouble;
+    const colSingle = isLight ? baseLight : baseDark;
+
+    // outer single (between triple_outer and double_inner)
+    addSeg(svg, arcPath(R_TRIPLE_OUTER, R_DOUBLE_INNER, a1, a2), colSingle, `S${num}`, num, 'single');
+    // inner single (between bull_outer and triple_inner)
+    addSeg(svg, arcPath(R_BULL_OUTER, R_TRIPLE_INNER, a1, a2), colSingle, `S${num}`, num, 'single');
+    // triple
+    addSeg(svg, arcPath(R_TRIPLE_INNER, R_TRIPLE_OUTER, a1, a2), colTriple, `T${num}`, num*3, 'triple');
+    // double
+    addSeg(svg, arcPath(R_DOUBLE_INNER, R_DOUBLE_OUTER, a1, a2), colDouble, `D${num}`, num*2, 'double');
+    // number label
+    const [lx,ly] = polar(R_DOUBLE_OUTER + 9, center);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', lx); t.setAttribute('y', ly+4);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('class','num');
+    t.setAttribute('font-size','14');
+    t.textContent = num;
+    svg.appendChild(t);
+  }
+  // bull outer (25)
+  const bullOuter = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  bullOuter.setAttribute('r', R_BULL_OUTER);
+  bullOuter.setAttribute('cx',0); bullOuter.setAttribute('cy',0);
+  bullOuter.setAttribute('fill', '#2a9d4a');
+  bullOuter.setAttribute('class','seg');
+  bullOuter.dataset.label = '25';
+  bullOuter.dataset.value = 25;
+  bullOuter.dataset.kind = 'single';
+  svg.appendChild(bullOuter);
+
+  // bullseye (50)
+  const bullInner = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  bullInner.setAttribute('r', R_BULL_INNER);
+  bullInner.setAttribute('cx',0); bullInner.setAttribute('cy',0);
+  bullInner.setAttribute('fill', '#d62828');
+  bullInner.setAttribute('class','seg');
+  bullInner.dataset.label = 'Bull';
+  bullInner.dataset.value = 50;
+  bullInner.dataset.kind = 'double'; // bullseye counts as double for checkouts
+  svg.appendChild(bullInner);
+
+  // wires (concentric)
+  [R_BULL_INNER, R_BULL_OUTER, R_TRIPLE_INNER, R_TRIPLE_OUTER, R_DOUBLE_INNER, R_DOUBLE_OUTER].forEach(r => {
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r', r);
+    c.setAttribute('cx',0); c.setAttribute('cy',0);
+    c.setAttribute('class','wire');
+    svg.appendChild(c);
+  });
+
+  // --- Invisible larger tap targets, drawn on top so they win hit-testing ---
+  // These keep the visible board traditional while making rings easier to tap.
+  // 25 ring tap (annulus). Drawn first so the bullseye tap can sit on top.
+  add25Tap(svg);
+  // Per-segment triple + double tap zones
+  for (let i=0; i<20; i++) {
+    const num = SEGMENT_NUMBERS[i];
+    const center = i*segWidth;
+    const a1 = center - segWidth/2;
+    const a2 = center + segWidth/2;
+    addTapZone(svg, arcPath(R_TRIPLE_TAP_IN, R_TRIPLE_TAP_OUT, a1, a2), `T${num}`, num*3, 'triple');
+    addTapZone(svg, arcPath(R_DOUBLE_TAP_IN, R_DOUBLE_TAP_OUT, a1, a2), `D${num}`, num*2, 'double');
+  }
+  // Bullseye tap (drawn last so it beats the 25 tap when in the center)
+  addBullseyeTap(svg);
+
+  // delegate clicks
+  svg.addEventListener('click', (e) => {
+    const t = e.target.closest('.seg');
+    if (!t) return;
+    const value = parseInt(t.dataset.value, 10);
+    const label = t.dataset.label;
+    const kind = t.dataset.kind;
+    onDart(label, value, kind, e);
+  });
+}
+
+function addTapZone(svg, d, label, value, kind) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', d);
+  p.setAttribute('fill', 'transparent');
+  p.setAttribute('class', 'seg tap');
+  p.dataset.label = label;
+  p.dataset.value = value;
+  p.dataset.kind  = kind;
+  svg.appendChild(p);
+}
+
+function add25Tap(svg) {
+  // Annular tap zone for the 25 ring, built as a single filled-rule path
+  const outer = `M ${R_25_TAP_OUTER} 0 A ${R_25_TAP_OUTER} ${R_25_TAP_OUTER} 0 1 1 -${R_25_TAP_OUTER} 0 A ${R_25_TAP_OUTER} ${R_25_TAP_OUTER} 0 1 1 ${R_25_TAP_OUTER} 0 Z`;
+  const inner = `M ${R_25_TAP_INNER} 0 A ${R_25_TAP_INNER} ${R_25_TAP_INNER} 0 1 0 -${R_25_TAP_INNER} 0 A ${R_25_TAP_INNER} ${R_25_TAP_INNER} 0 1 0 ${R_25_TAP_INNER} 0 Z`;
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', outer + ' ' + inner);
+  p.setAttribute('fill', 'transparent');
+  p.setAttribute('fill-rule', 'evenodd');
+  p.setAttribute('class', 'seg tap');
+  p.dataset.label = '25';
+  p.dataset.value = 25;
+  p.dataset.kind  = 'single';
+  svg.appendChild(p);
+}
+
+function addBullseyeTap(svg) {
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('r', R_BULL_TAP);
+  c.setAttribute('cx', 0); c.setAttribute('cy', 0);
+  c.setAttribute('fill', 'transparent');
+  c.setAttribute('class', 'seg tap');
+  c.dataset.label = 'Bull';
+  c.dataset.value = 50;
+  c.dataset.kind  = 'double';
+  svg.appendChild(c);
+}
+
+function addSeg(svg, d, fill, label, value, kind) {
+  const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d', d);
+  p.setAttribute('fill', fill);
+  p.setAttribute('class','seg');
+  p.dataset.label = label;
+  p.dataset.value = value;
+  p.dataset.kind = kind;
+  svg.appendChild(p);
+}
+
+/* ------------ Game state ------------ */
+const state = {
+  target: 0,
+  dateStr: '',
+  attemptIdx: 0,
+  currentDarts: [], // {label, value, kind} — darts thrown in the in-progress attempt
+  attempts: [], // each: {darts:[], outcome: 'matched'|'hit'|'bust'|'short', sum, count}
+  finished: false,
+  playerName: '',
+  perfectAchieved: false,
+  hintsUsed: 0, // number of hint reveals used across all attempts
+  startTime: 0, // ms epoch — set on first dart of the day
+  endTime: 0,   // ms epoch — set when matched
+};
+
+function formatDuration(ms) {
+  if (!ms || ms < 0) return '';
+  const s = Math.round(ms / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  if (m < 60) return sec ? `${m}m ${sec}s` : `${m}m`;
+  const h = Math.floor(m / 60);
+  const min = m % 60;
+  return min ? `${h}h ${min}m` : `${h}h`;
+}
+
+const STORAGE_KEY = 'dartle_v1';
+const NAME_KEY = 'dartle_name_v1';
+const STREAK_KEY = 'dartle_streak_v1';
+
+/* ------------ Streak (consecutive successful days) ------------ */
+const streak = {
+  current: 0,
+  best: 0,
+  lastCompletedDate: '', // last day the puzzle was finished (won OR lost)
+  lastWonDate: '',       // last day they matched the route
+  countedToday: false,   // whether today's result has already been applied to streak
+};
+function loadStreak() {
+  try {
+    const raw = localStorage.getItem(STREAK_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    Object.assign(streak, d);
+  } catch {}
+}
+function saveStreak() {
+  try { localStorage.setItem(STREAK_KEY, JSON.stringify(streak)); } catch {}
+}
+function daysBetween(aStr, bStr) {
+  if (!aStr || !bStr) return Infinity;
+  const a = new Date(aStr + 'T00:00:00');
+  const b = new Date(bStr + 'T00:00:00');
+  return Math.round((b - a) / 86400000);
+}
+// Called on app load — if the player skipped a day since last completion, the streak breaks.
+function applySkippedDayBreak(today) {
+  const last = streak.lastCompletedDate;
+  if (!last) return;
+  if (daysBetween(last, today) > 1 && streak.current > 0) {
+    streak.current = 0;
+    saveStreak();
+  }
+}
+// Called once when the day's puzzle finishes — applies the day's result to the streak.
+function recordDailyResult(today, won) {
+  if (streak.countedToday && streak.lastCompletedDate === today) return;
+  if (won) {
+    if (daysBetween(streak.lastWonDate, today) === 1) {
+      streak.current += 1;
+    } else {
+      streak.current = 1;
+    }
+    streak.lastWonDate = today;
+    if (streak.current > streak.best) streak.best = streak.current;
+  } else {
+    streak.current = 0;
+  }
+  streak.lastCompletedDate = today;
+  streak.countedToday = true;
+  saveStreak();
+}
+
+/* ------------ Player name ------------ */
+function loadName() {
+  try { return localStorage.getItem(NAME_KEY) || ''; } catch { return ''; }
+}
+function saveName(n) {
+  try { localStorage.setItem(NAME_KEY, n); } catch {}
+}
+function sanitizeName(raw) {
+  return (raw || '').trim().replace(/\s+/g,' ').slice(0, 20);
+}
+function showNameModal({initial = '', firstTime = true} = {}) {
+  const modal = document.getElementById('modal');
+  modal.innerHTML = `
+    <h2>${firstTime ? 'Welcome to Dartle' : 'Change name'}</h2>
+    <div class="result-line">${firstTime ? "What should we call you?" : 'Enter a new name.'}</div>
+    <input class="name-input" id="nameInput" type="text" placeholder="Your name" maxlength="20" value="${initial.replace(/"/g,'&quot;')}" autocomplete="off" />
+    <div style="display:flex; gap:8px;">
+      ${firstTime ? '' : '<button class="btn ghost" id="cancelName">Cancel</button>'}
+      <button class="btn primary" id="saveName">${firstTime ? 'Start Playing' : 'Save'}</button>
+    </div>
+  `;
+  document.getElementById('modalBack').classList.add('open');
+  const input = document.getElementById('nameInput');
+  setTimeout(() => input.focus(), 50);
+  const submit = () => {
+    const name = sanitizeName(input.value);
+    if (!name) { input.focus(); return; }
+    state.playerName = name;
+    saveName(name);
+    document.getElementById('modalBack').classList.remove('open');
+    renderGreeting();
+    if (state.finished) showResults(); // re-render results modal with name
+  };
+  document.getElementById('saveName').addEventListener('click', submit);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+  if (!firstTime) {
+    document.getElementById('cancelName').addEventListener('click', () => {
+      document.getElementById('modalBack').classList.remove('open');
+      if (state.finished) showResults();
+    });
+  }
+}
+
+function renderGreeting() {
+  const el = document.getElementById('greeting');
+  if (!state.playerName) { el.hidden = true; return; }
+  el.hidden = false;
+  const tag = state.finished ? 'Nice playing,' : 'Good luck,';
+  const streakHtml = streak.current > 0
+    ? `<span class="streak" title="Current streak — wins in a row">🔥 ${streak.current}</span>`
+    : '';
+  el.innerHTML = `${tag} <span class="name" id="nameEdit" title="Tap to change">${state.playerName}</span>${streakHtml}`;
+  document.getElementById('nameEdit').addEventListener('click', () => {
+    showNameModal({initial: state.playerName, firstTime: false});
+  });
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    return d;
+  } catch { return null; }
+}
+function saveState() {
+  const data = {
+    dateStr: state.dateStr,
+    target: state.target,
+    attempts: state.attempts,
+    finished: state.finished,
+    perfectAchieved: state.perfectAchieved,
+    hintsUsed: state.hintsUsed,
+    startTime: state.startTime,
+    endTime: state.endTime,
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+/* ------------ Game logic ------------ */
+function init() {
+  const { target, dateStr } = dailyTarget();
+  state.target = target;
+  state.dateStr = dateStr;
+  state.playerName = loadName();
+  loadStreak();
+  // If lastCompletedDate is today, the streak was already counted; otherwise reset the daily flag.
+  streak.countedToday = (streak.lastCompletedDate === dateStr);
+  applySkippedDayBreak(dateStr);
+
+  const saved = loadState();
+  if (saved && saved.dateStr === dateStr && saved.target === target) {
+    state.attempts = saved.attempts || [];
+    state.attemptIdx = state.attempts.length;
+    state.finished = !!saved.finished;
+    state.perfectAchieved = !!saved.perfectAchieved;
+    state.hintsUsed = saved.hintsUsed || 0;
+    state.startTime = saved.startTime || 0;
+    state.endTime = saved.endTime || 0;
+  }
+
+  document.getElementById('targetValue').textContent = target;
+  document.getElementById('dateSub').textContent = `Daily Checkout · ${dateStr}`;
+  buildBoard();
+  renderGreeting();
+  renderAll();
+
+  document.getElementById('hintBtn').addEventListener('click', revealHint);
+
+  if (!state.playerName) {
+    showNameModal({firstTime: true});
+  } else if (state.finished) {
+    showResults();
+  }
+}
+
+// Each tap throws a dart. After every throw we evaluate whether the attempt is over
+// (matched / valid checkout / bust / 3 darts thrown -> 'short').
+function onDart(label, value, kind, evt) {
+  if (state.finished) return;
+  if (state.currentDarts.length >= 3) return;
+  // Start the solve timer on the very first dart of today's puzzle
+  if (!state.startTime) state.startTime = Date.now();
+  state.currentDarts.push({label, value, kind});
+  renderDarts();
+  showRipple(evt, label);
+  if (window.navigator.vibrate) window.navigator.vibrate(8);
+
+  // Evaluate after each throw
+  const darts = state.currentDarts;
+  const sum = sumDarts(darts);
+  const lastIsDouble = darts[darts.length-1].kind === 'double';
+  const matched = routeMatches(darts, state.target);
+
+  let outcome = null;
+  if (matched) outcome = 'matched';
+  else if (sum > state.target) outcome = 'bust';
+  else if (sum === state.target && lastIsDouble) outcome = 'hit';
+  else if (darts.length >= 3) outcome = 'short';
+  // else -> still throwing
+
+  if (outcome) {
+    finalizeAttempt(outcome, sum);
+  }
+}
+
+function finalizeAttempt(outcome, sum) {
+  const darts = state.currentDarts.slice();
+  state.attempts.push({darts, outcome, sum, count: darts.length});
+  state.currentDarts = [];
+  state.attemptIdx = state.attempts.length;
+
+  if (outcome === 'matched') {
+    state.perfectAchieved = true;
+    state.endTime = Date.now();
+  }
+  if (outcome === 'matched' || state.attempts.length >= 3) {
+    state.finished = true;
+    recordDailyResult(state.dateStr, state.perfectAchieved);
+  }
+  saveState();
+  renderAll();
+
+  // Brief feedback
+  if (state.finished) {
+    setTimeout(showResults, 500);
+  } else if (outcome === 'hit') {
+    setTimeout(() => toast(`Checkout in ${darts.length} — but not the recommended route. Try again.`), 200);
+  } else if (outcome === 'bust') {
+    setTimeout(() => toast(`Bust on ${sum}.`), 200);
+  } else if (outcome === 'short') {
+    setTimeout(() => toast(`Short — ended on ${sum}/${state.target}.`), 200);
+  }
+}
+
+function revealHint() {
+  if (state.finished) return;
+  const route = ROUTES[state.target];
+  if (!route) return;
+  // Hint level can be at most route.length - 1 (we never reveal the final dart).
+  // Available level grows with the number of finished attempts.
+  const maxLevel = Math.min(state.attempts.length, route.length - 1);
+  if (state.hintsUsed < maxLevel) {
+    state.hintsUsed += 1;
+    saveState();
+    renderAll();
+  }
+}
+
+function showRipple(e, label) {
+  const wrap = document.getElementById('boardWrap');
+  const rect = wrap.getBoundingClientRect();
+  const x = (e.clientX || (e.changedTouches && e.changedTouches[0].clientX)) - rect.left;
+  const y = (e.clientY || (e.changedTouches && e.changedTouches[0].clientY)) - rect.top;
+  const r = document.createElement('div');
+  r.className = 'ripple';
+  r.style.left = x+'px';
+  r.style.top  = y+'px';
+  r.textContent = label;
+  wrap.appendChild(r);
+  setTimeout(() => r.remove(), 700);
+}
+
+function sumDarts(darts) { return darts.reduce((s,d) => s + d.value, 0); }
+
+function routeMatches(darts, target) {
+  const route = ROUTES[target];
+  if (!route) return false;
+  if (darts.length !== route.length) return false;
+  for (let i = 0; i < route.length; i++) {
+    if (darts[i].label !== route[i]) return false;
+  }
+  return true;
+}
+
+/* ------------ Render ------------ */
+function dartsToString(darts) {
+  return darts.map(d => d.label).join(' · ');
+}
+
+function renderDarts() {
+  const slots = document.querySelectorAll('.dart-slot .val');
+  slots.forEach((el, i) => {
+    const d = state.currentDarts[i];
+    if (d) { el.textContent = d.label; el.classList.remove('placeholder'); }
+    else { el.textContent = '—'; el.classList.add('placeholder'); }
+  });
+  const sum = sumDarts(state.currentDarts);
+  document.getElementById('remaining').textContent = `Remaining: ${state.target - sum}`;
+}
+
+function renderAttemptsPills() {
+  const pills = document.querySelectorAll('#attempts .pill');
+  pills.forEach((p,i) => {
+    p.classList.remove('active','done','success');
+    const a = state.attempts[i];
+    if (a) {
+      p.classList.add('done');
+      if (a.outcome === 'hit') p.classList.add('success');
+    } else if (i === state.attempts.length && !state.finished) {
+      p.classList.add('active');
+    }
+  });
+}
+
+function renderHistory() {
+  const h = document.getElementById('history');
+  h.innerHTML = '';
+  state.attempts.forEach((a, i) => {
+    const row = document.createElement('div');
+    row.className = 'attempt-row';
+    const left = document.createElement('div');
+    left.innerHTML = `<strong>#${i+1}</strong> <span class="darts">${dartsToString(a.darts)}</span>`;
+    const badge = document.createElement('div');
+    let cls, text;
+    if (a.outcome === 'matched')      { cls = 'success'; text = `⭐ Recommended route!`; }
+    else if (a.outcome === 'hit')     { cls = 'fail';    text = `Checkout (wrong route)`; }
+    else if (a.outcome === 'bust')    { cls = 'bust';    text = `Bust (${a.sum})`; }
+    else if (a.outcome === 'short')   { cls = 'fail';    text = `Short (${a.sum}/${state.target})`; }
+    else                              { cls = 'fail';    text = `Missed (${a.sum})`; }
+    badge.className = 'badge ' + cls;
+    badge.textContent = text;
+    row.appendChild(left); row.appendChild(badge);
+    h.appendChild(row);
+  });
+}
+
+function renderHintAndCoaching() {
+  const btn = document.getElementById('hintBtn');
+  const panel = document.getElementById('coaching');
+  const route = ROUTES[state.target];
+  if (!route || state.finished) {
+    btn.hidden = true;
+    if (panel) panel.hidden = true;
+    return;
+  }
+  // Hint can be revealed up to one less than the route length (final dart never spoiled mid-game),
+  // and only after at least one attempt has been made.
+  const maxAvail = Math.min(state.attempts.length, route.length - 1);
+  const canRevealMore = state.hintsUsed < maxAvail;
+
+  // Coaching panel shows what's already been revealed
+  if (state.hintsUsed > 0) {
+    const shown = route.slice(0, state.hintsUsed).join(' → ');
+    const remaining = route.length - state.hintsUsed;
+    panel.hidden = false;
+    panel.innerHTML = `<span class="hint-label">Hint</span> Start with <strong>${shown}</strong>${remaining > 0 ? ` <span class="hint-rest">→ ${Array(remaining).fill('?').join(' → ')}</span>` : ''}`;
+  } else {
+    panel.hidden = true;
+  }
+
+  // Button: visible only if more hints can be revealed
+  btn.hidden = !canRevealMore;
+  btn.textContent = state.hintsUsed === 0 ? '💡 Show hint' : '💡 Show next hint';
+}
+
+function renderAll() {
+  renderDarts();
+  renderAttemptsPills();
+  renderHistory();
+  renderHintAndCoaching();
+}
+
+/* ------------ Results screen ------------ */
+function buildShareString() {
+  const parts = [];
+  const who = state.playerName ? `${state.playerName} · ` : '';
+  parts.push(`Dartle ${state.dateStr}`);
+  parts.push(`${who}Target: ${state.target}`);
+  const symbols = state.attempts.map(a => {
+    if (a.outcome === 'matched') return '⭐';
+    if (a.outcome === 'hit') return '🎯';
+    if (a.outcome === 'bust') return '💥';
+    return '⚪';
+  });
+  while (symbols.length < 3) symbols.push('▫️');
+  parts.push(symbols.join(''));
+  if (state.perfectAchieved) {
+    const tries = state.attempts.findIndex(a => a.outcome === 'matched') + 1;
+    parts.push(`Found the recommended route in ${tries}/3`);
+  } else {
+    parts.push(`Didn't find the recommended route`);
+  }
+  if (state.perfectAchieved && state.startTime && state.endTime) {
+    parts.push(`⚡ ${formatDuration(state.endTime - state.startTime)}`);
+  }
+  if (state.hintsUsed > 0) {
+    parts.push(`💡 Hint used (${state.hintsUsed})`);
+  }
+  if (streak.current > 0) {
+    parts.push(`🔥 ${streak.current}-day streak`);
+  }
+  parts.push('https://dartle.app');
+  return parts.join('\n');
+}
+
+function showResults() {
+  const modal = document.getElementById('modal');
+  const route = ROUTES[state.target];
+  const routeStr = route ? route.join(' → ') : '—';
+  const note = NOTES[state.target] || '';
+  const who = state.playerName || 'player';
+  const tries = state.attempts.findIndex(a => a.outcome === 'matched') + 1; // 0 if none
+
+  const duration = (state.perfectAchieved && state.startTime && state.endTime)
+    ? formatDuration(state.endTime - state.startTime) : '';
+
+  let title, sub;
+  if (state.perfectAchieved) {
+    title = `⭐ Nailed it, ${who}!`;
+    const tryStr = tries === 1
+      ? `You found the recommended route on your first try`
+      : `You found the recommended route on attempt ${tries}`;
+    sub = duration ? `${tryStr} in <strong>${duration}</strong>.` : `${tryStr}.`;
+  } else {
+    const anyHit = state.attempts.some(a => a.outcome === 'hit');
+    title = `So close, ${who}`;
+    sub = anyHit
+      ? `You checked out, but not via the recommended route. Here's how our coach would do it:`
+      : `You didn't find the route in 3 attempts. Here's how our coach would do it:`;
+  }
+
+  const share = buildShareString();
+  const hintBadge = state.hintsUsed > 0
+    ? `<div class="hint-used-badge">💡 Hint used (${state.hintsUsed})</div>`
+    : '';
+  let streakLine = '';
+  if (state.perfectAchieved && streak.current > 0) {
+    const bestSuffix = streak.current >= streak.best && streak.best > 1 ? ' — your best!' : '';
+    streakLine = `<div class="streak-line"><span class="streak">🔥 ${streak.current}-day streak${bestSuffix}</span></div>`;
+  } else if (!state.perfectAchieved && streak.best > 0) {
+    streakLine = `<div class="streak-line"><span class="streak broken">Streak broken · best ${streak.best}</span></div>`;
+  }
+  modal.innerHTML = `
+    <h2>${title}</h2>
+    <div class="result-line">${sub}</div>
+    ${streakLine}
+    ${hintBadge}
+    <div class="perfect">
+      <div class="label">Recommended Route · ${state.target}</div>
+      <div class="checkout">${routeStr}</div>
+      ${note ? `<div class="note">${note}</div>` : ''}
+    </div>
+    <div class="share-block" id="shareBlock">${share}</div>
+    <button class="btn primary" id="shareBtn" style="width:100%;">Share</button>
+    <div class="comeback">Come back tomorrow for a new checkout 🎯</div>
+  `;
+  document.getElementById('modalBack').classList.add('open');
+  document.getElementById('shareBtn').addEventListener('click', async () => {
+    // 1. Web Share API (mobile, requires HTTPS / secure context)
+    if (navigator.share) {
+      try { await navigator.share({text: share}); return; }
+      catch (e) { /* user cancelled, or unsupported — fall through */ }
+    }
+    // 2. Modern Clipboard API (also requires secure context)
+    if (navigator.clipboard && window.isSecureContext) {
+      try { await navigator.clipboard.writeText(share); toast('Copied to clipboard'); return; }
+      catch (e) { /* fall through to legacy */ }
+    }
+    // 3. Legacy execCommand('copy') — works on plain HTTP
+    if (legacyCopyToClipboard(share)) {
+      toast('Copied to clipboard');
+      return;
+    }
+    // 4. Last resort: select the share text so the user can long-press / Ctrl-C
+    selectShareBlock();
+    toast('Tap & hold the text to copy');
+  });
+}
+
+function legacyCopyToClipboard(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly','');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '0';
+    ta.style.opacity = '0';
+    ta.style.pointerEvents = 'none';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) {
+    return false;
+  }
+}
+
+function selectShareBlock() {
+  const el = document.getElementById('shareBlock');
+  if (!el) return;
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
